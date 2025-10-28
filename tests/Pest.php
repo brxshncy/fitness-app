@@ -11,6 +11,9 @@
 |
 */
 
+use App\Models\Role;
+use App\Models\User;
+
 pest()->extend(Tests\TestCase::class)
  // ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
     ->in('Feature');
@@ -41,7 +44,19 @@ expect()->extend('toBeOne', function () {
 |
 */
 
-function something()
-{
-    // ..
+function createUser (array $data = []): User  {
+    $user = User::factory()->create($data);
+
+    return $user;
+}
+
+function createRoles () {
+    $roles = [ Role::ADMIN, Role::CLIENT, Role::COACH];
+    
+    foreach ($roles as $role) {
+        Role::create(['name' => $role]);
+    }
+}
+function assignUserRole ($user, string $role = Role::ADMIN) {
+    $user->assignRole($role);
 }

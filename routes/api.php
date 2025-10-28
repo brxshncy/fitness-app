@@ -14,4 +14,4 @@ Route::prefix('admin')
     ->as('admin.')
     ->group(function () {
         Route::apiResource('organization', OrganizationController::class);
-    });
+});

@@ -5,7 +5,6 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\Sanctum;
-use Spatie\Permission\Models\Role;
 use Spatie\Permission\PermissionRegistrar;
 
 uses(RefreshDatabase::class);
@@ -13,25 +12,19 @@ uses(RefreshDatabase::class);
 beforeEach(function () {
     // Spatie caches roles/permissions; clear between tests to avoid “sticky” state.
     app(PermissionRegistrar::class)->forgetCachedPermissions();
+    createRoles();
 });
 
-/**
- * Small helpers to DRY things up
- */
-function ensureAdminRole(string $guard = 'api'): Role
-{
-    // Creates or fetches the 'admin' role for the given guard
-    return Role::firstOrCreate(['name' => ModelsRole::ADMIN]);
-}
 
 function makeAdminUser(array $overrides = []): User
 {
-    $user = User::factory()->create(array_merge([
+    $user = createUser([
+        'name' => 'Admin',
         'email'    => 'admin@admin.com',
         'password' => Hash::make('admin123'),
-    ], $overrides));
+    ]);
 
-    $user->assignRole(ensureAdminRole());
+    assignUserRole($user, ModelsRole::ADMIN);
 
     return $user;
 }
