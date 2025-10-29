@@ -11,6 +11,7 @@
 |
 */
 
+use App\Models\Organization;
 use App\Models\Role;
 use App\Models\User;
 
@@ -57,6 +58,13 @@ function createRoles () {
         Role::create(['name' => $role]);
     }
 }
+
+function createOrganization ( array $data = []) : Organization {
+    $organization = Organization::factory()->create($data);
+
+    return $organization;
+}
+
 function assignUserRole ($user, string $role = Role::ADMIN) {
     $user->assignRole($role);
 }
